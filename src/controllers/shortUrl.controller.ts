@@ -117,7 +117,7 @@ export const getAllShortUrls = async (
 
     // Get URLs
     const shortUrls = await ShortUrl.find(filter)
-      .sort({ clicks: -1 })
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
@@ -144,7 +144,6 @@ export const getAllShortUrls = async (
       },
     });
   } catch (error) {
-    console.error('Error fetching short URLs:', error);
     res.status(500).json({
       success: false,
       message: 'Server error occurred while fetching short URLs',
@@ -173,7 +172,6 @@ export const getShortUrl = async (
       link: shortUrl,
     });
   } catch (error) {
-    console.error('Error fetching short URL:', error);
     res.status(500).json({
       success: false,
       message: 'Server error occurred while fetching short URL',
@@ -211,9 +209,8 @@ export const redirectToOriginalUrl = async (
     if (ip && ip.startsWith('::ffff:')) {
       ip = ip.replace('::ffff:', '');
     }
-    console.log(ip);
+
     const geo = geoip.lookup(ip);
-    console.log({ geo });
 
     // Create visit record
     const visit = {
@@ -240,7 +237,6 @@ export const redirectToOriginalUrl = async (
 
     res.redirect(shortUrl.originalUrl);
   } catch (error) {
-    console.error('Error redirecting to original URL:', error);
     res.status(500).json({
       success: false,
       message: 'Server error occurred during redirect',
